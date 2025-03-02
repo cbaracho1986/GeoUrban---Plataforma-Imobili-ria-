@@ -1,6 +1,6 @@
 # GeoUrban-Plataforma Imobiliária 3D
 ## 📌 Objetivo
-Desenvolver uma **plataforma ultra moderna** para modelagem 3D de planejamento urbano e arquitetônico, utilizando **Flask, HTML, CSS e JavaScript**, que permita aos usuários **visualizar, criar e manipular terrenos e edifícios** através de uma interface interativa 3D.
+**plataforma ultra moderna** para modelagem 3D de planejamento urbano e arquitetônico, utilizando **Flask, HTML, CSS e JavaScript**, que permita aos usuários **visualizar, criar e manipular terrenos e edifícios** através de uma interface interativa 3D.
 
 ---
 
