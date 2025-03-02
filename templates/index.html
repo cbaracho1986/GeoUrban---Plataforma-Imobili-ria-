@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spacio - 3D Urban Planning</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h1>Spacio</h1>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li class="nav-item active" data-panel="design">
+                        <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm16 16V7H5v12h14z"/></svg>
+                        <span>Design</span>
+                    </li>
+                    <li class="nav-item" data-panel="map">
+                        <svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+                        <span>Map</span>
+                    </li>
+                    <li class="nav-item" data-panel="buildings">
+                        <svg viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h14v-8h3L12 3zm-1 16v-5h2v5h-2z"/></svg>
+                        <span>Buildings</span>
+                    </li>
+                    <li class="nav-item" data-panel="terrain">
+                        <svg viewBox="0 0 24 24"><path d="M14 6l-4.22 5.63 1.25 1.67L14 9.33 19 16h-8.46l-4.01-5.37L1 18h22L14 6zM5 16l1.52-2.03L8.04 16H5z"/></svg>
+                        <span>Terrain</span>
+                    </li>
+                    <li class="nav-item" data-panel="styles">
+                        <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                        <span>Styles</span>
+                    </li>
+                    <li class="nav-item" data-panel="export">
+                        <svg viewBox="0 0 24 24"><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z"/></svg>
+                        <span>Export</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-bar">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="user-controls">
+                    <button class="btn btn-primary">Generate</button>
+                    <button class="btn">Save</button>
+                    <div class="user-profile" id="user-profile">
+                        <img src="https://via.placeholder.com/32" alt="User">
+                        <div class="user-dropdown" id="user-dropdown">
+                            <div class="dropdown-header">
+                                <span id="user-name">Usuário</span>
+                                <span id="user-email" class="user-email">usuario@example.com</span>
+                            </div>
+                            <div class="dropdown-body">
+                                <a href="#" class="dropdown-item">Meus projetos</a>
+                                <a href="#" class="dropdown-item">Configurações</a>
+                                <hr>
+                                <a href="#" id="logout-button" class="dropdown-item logout">Sair</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3D Viewport -->
+            <div id="viewport" class="viewport">
+                <!-- 3D content will be rendered here -->
+            </div>
+
+            <!-- Control Panels -->
+            <div class="control-panel" id="design-panel">
+                <h2>Design Parameters</h2>
+                <div class="panel-content">
+                    <div class="parameter-group">
+                        <label>Building Density</label>
+                        <input type="range" min="0" max="100" value="50" class="slider" id="density-slider">
+                        <span class="value">50%</span>
+                    </div>
+                    
+                    <div class="parameter-group">
+                        <label>Building Style</label>
+                        <select id="style-select">
+                            <option value="modern">Modern</option>
+                            <option value="corporate">Corporate</option>
+                            <option value="residential">Residential</option>
+                        </select>
+                    </div>
+                    
+                    <div class="parameter-group">
+                        <label>Roof Type</label>
+                        <select id="roof-type-select">
+                            <option value="flat">Flat</option>
+                            <option value="pitched">Pitched</option>
+                            <option value="hipped">Hipped</option>
+                        </select>
+                    </div>
+                    
+                    <div class="parameter-group">
+                        <label>Building Complexity</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="complex-volume-checkbox" checked>
+                            <label for="complex-volume-checkbox">Complex Volumes</label>
+                        </div>
+                    </div>
+                    
+                    <div class="parameter-group">
+                        <label>Urban Layout</label>
+                        <div class="toggle-group">
+                            <button class="toggle active" data-value="residential">Residential</button>
+                            <button class="toggle" data-value="commercial">Commercial</button>
+                            <button class="toggle" data-value="mixed">Mixed</button>
+                        </div>
+                    </div>
+                    
+                    <div class="parameter-group">
+                        <label>Openness</label>
+                        <input type="range" min="0" max="100" value="30" class="slider" id="openness-slider">
+                        <span class="value">30%</span>
+                    </div>
+
+                    <div class="parameter-group">
+                        <label>Generate Multiple Buildings</label>
+                        <div class="range-with-value">
+                            <input type="range" min="1" max="10" value="1" class="slider" id="building-count-slider">
+                            <span class="value">1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Buildings Panel -->
+            <div class="control-panel" id="buildings-panel" style="display: none;">
+                <h2>Buildings</h2>
+                <div class="panel-content">
+                    <div class="buildings-list" id="buildings-list">
+                        <!-- Building items will be added dynamically -->
+                        <div class="empty-state">
+                            <p>No buildings yet. Generate some buildings to see them here.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-actions">
+                        <button class="btn btn-danger" id="clear-buildings-btn">Clear All</button>
+                        <button class="btn" id="load-buildings-btn">Load Samples</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Terrain Panel -->
+            <div class="control-panel" id="terrain-panel" style="display: none;">
+                <h2>Terrain</h2>
+                <div class="panel-content">
+                    <div class="parameter-group">
+                        <label>Drawing Mode</label>
+                        <div class="toggle-group">
+                            <button class="toggle active" data-mode="rectangle">Rectangle</button>
+                            <button class="toggle" data-mode="polygon">Polygon</button>
+                        </div>
+                    </div>
+                    
+                    <div class="parameter-group">
+                        <label>Terrain Height</label>
+                        <input type="range" min="0" max="10" value="0.5" step="0.1" class="slider" id="terrain-height-slider">
+                        <span class="value">0.5</span>
+                    </div>
+                    
+                    <div class="parameter-group">
+                        <label>Terrain Type</label>
+                        <select id="terrain-type-select">
+                            <option value="grass">Grass</option>
+                            <option value="pavement">Pavement</option>
+                            <option value="water">Water</option>
+                        </select>
+                    </div>
+                    
+                    <div class="terrain-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Area:</span>
+                            <span class="stat-value" id="terrain-area">0 m²</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Perimeter:</span>
+                            <span class="stat-value" id="terrain-perimeter">0 m</span>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-actions">
+                        <button class="btn btn-danger" id="clear-terrain-btn">Clear Terrain</button>
+                        <button class="btn" id="import-terrain-btn">Import</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Map Panel -->
+            <div class="control-panel map-panel" id="map-panel" style="display: none;">
+                <h2>Map</h2>
+                <div class="panel-content">
+                    <div id="mapbox-container" class="mapbox-container"></div>
+                    
+                    <div class="parameter-group">
+                        <label>Map Style</label>
+                        <select id="map-style-select">
+                            <option value="mapbox://styles/mapbox/streets-v11">Streets</option>
+                            <option value="mapbox://styles/mapbox/satellite-v9">Satellite</option>
+                            <option value="mapbox://styles/mapbox/satellite-streets-v11">Satellite Streets</option>
+                            <option value="mapbox://styles/mapbox/light-v10">Light</option>
+                            <option value="mapbox://styles/mapbox/dark-v10">Dark</option>
+                        </select>
+                    </div>
+                    
+                    <div class="parameter-group">
+                        <label>Drawing Mode</label>
+                        <div class="toggle-group">
+                            <button class="toggle active" data-map-mode="select">Select</button>
+                            <button class="toggle" data-map-mode="draw">Draw Plot</button>
+                        </div>
+                    </div>
+                    
+                    <div class="map-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Plot Area:</span>
+                            <span class="stat-value" id="map-area">0 m²</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Building Coverage:</span>
+                            <span class="stat-value" id="building-coverage">0 m²</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Building Coverage Ratio:</span>
+                            <span class="stat-value" id="building-coverage-ratio">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-actions">
+                        <button class="btn btn-danger" id="clear-plot-btn">Clear Plot</button>
+                        <button class="btn btn-primary" id="import-to-3d-btn">Import to 3D</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.4.0/mapbox-gl-draw.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.4.0/mapbox-gl-draw.css' type='text/css' />
+    <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiY2JhcmFjaG8yIiwiYSI6ImNscDE4Y3JwNjBlOHkyaG9id2EyMWM1dG0ifQ.sSwUd94oiKHHp2ZKQ-Zm1A';
+        
+        // Create MapboxDraw object
+        const MapboxDraw = mapboxgl.MapboxDraw;
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
